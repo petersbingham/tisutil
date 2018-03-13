@@ -1,76 +1,75 @@
-import numpy as np
-import matplotlib.pyplot as plt
-from cycler import cycler
-import random
-
-import pynumwrap as nw
-
+import matfuncutil as mfu
 import conversions as con
 
 RYDs = 0
 eVs = 1
 
-class Base(dict):
-    def __init__(self, d={}, units=RYDs):
-        dict.__init__(self, d)
-        self.units = units
-        
-        self.chartTitle = ""
-        self.colourCycle = ['red', 'green', 'blue', 'purple']
-        self.legPrefix = ""
-        self.useMarker = False
-        self.xsize = None
-        self.ysize = None
-        
-        self.sigFigs = 6
-
-    
-    def convertUnits(self, units):
-        if units == self.units:
+class dBase:
+    def convertUnits(self, newUnits):
+        if newUnits == self.units:
             return self
         elif self.units==RYDs or self.units==eVs:
-            if units==RYDs:
+            if newUnits==RYDs:
                 fac = 1./con.RYD_to_EV
-            elif units==eVs:
+            elif newUnits==eVs:
                 fac = con.RYD_to_EV
             else:
-                raise("Unknown conversion")
+                raise Exception("Unknown conversion")
         else:
-            raise("Unknown conversion")
-        newItem = self._createNewItem(units)
+            raise Exception("Unknown conversion")
+        newItem = self._createNewItem(newUnits)
         self._initNewItem(newItem)
         for k,v in self.iteritems():
             newItem[k*fac] = v
         return newItem
 
-class Smats(mats):
-    def toTMats(self):
+class dvals(mfu.dvals, dBase):
+    def __init__(self, d={}, units=RYDs):
+        mfu.dvals.__init__(self, d, units)
+
+class dvecs(mfu.dvecs, dBase):
+    def __init__(self, d={}, units=RYDs):
+        mfu.dvecs.__init__(self, d, units)
+
+    def _getReductionContainer(self):
+        return dvals(units=self.units)
+
+class dmats(mfu.dmats, dBase):
+    def __init__(self, d={}, units=RYDs):
+        mfu.dmats.__init__(self, d, units)
+
+    def _getReductionContainer(self):
+        return dvecs(units=self.units)
+
+
+class dSmats(dmats):
+    def to_dTMats(self):
         newItem = self._createNewItem(self.units)
         self._initNewItem(newItem)
         for k,v in self.iteritems():
-            newItem[k] = v - nw.identity(nw.shape(v)[0])
+            newItem[k] = v - mfu.nw.identity(mfu.nw.shape(v)[0])
         return newItem
-    def toKMats(self):
+    def to_dKMats(self):
         raise NotImplementedError
-    def toXSMats(self):
+    def to_dXSMats(self):
         raise NotImplementedError
-    def toEPhaseMats(self):
+    def to_dEPhaseMats(self):
         raise NotImplementedError
-    def toUniOpMats(self):
-        raise NotImplementedError
-
-class Kmats(mats):
-    def toTMats(self):
-        raise NotImplementedError
-    def toSMats(self):
-        raise NotImplementedError
-    def toXSMats(self):
+    def to_dUniOpMats(self):
         raise NotImplementedError
 
-class Tmats(mats):
-    def toSMats(self):
+class dKmats(dmats):
+    def to_dTMats(self):
         raise NotImplementedError
-    def toKMats(self):
+    def to_dSMats(self):
         raise NotImplementedError
-    def toXSMats(self):
+    def to_dXSMats(self):
+        raise NotImplementedError
+
+class dTmats(dmats):
+    def to_dSMats(self):
+        raise NotImplementedError
+    def to_dKMats(self):
+        raise NotImplementedError
+    def to_dXSMats(self):
         raise NotImplementedError
