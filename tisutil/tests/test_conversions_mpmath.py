@@ -8,10 +8,10 @@ import dumMats
 import unittest
 
 def useMpmathTypes():
-    dumMats.dis.mfu.nw.useMpmathTypes()
+    dumMats.tu.mfu.nw.useMpmathTypes()
 
 def usePythonTypes():
-    dumMats.dis.mfu.nw.usePythonTypes()
+    dumMats.tu.mfu.nw.usePythonTypes()
 
 class test_StoT(unittest.TestCase):
     def runTest(self):
