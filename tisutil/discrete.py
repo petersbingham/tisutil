@@ -44,35 +44,41 @@ class dMat(mfu.dMat, dBase):
 
 
 class dSmat(dMat):
-    def to_dTMats(self):
+    def to_dTmat(self):
         newItem = self._createNewItem(self.units)
         self._initNewItem(newItem)
         for k,v in self.iteritems():
             newItem[k] = v - mfu.nw.identity(mfu.nw.shape(v)[0])
         return newItem
-    def to_dKMats(self):
+    def to_dKmat(self):
         raise NotImplementedError
-    def to_dXSMats(self):
+    def to_dXSmat(self):
         raise NotImplementedError
-    def to_dEPhaseMats(self):
+    def to_dEPhaseMat(self):
         raise NotImplementedError
-    def to_dUniOpMats(self):
+    def to_dUniOpMat(self):
         raise NotImplementedError
 
 class dKmat(dMat):
-    def to_dTMats(self):
+    def to_dTmat(self):
         raise NotImplementedError
-    def to_dSMats(self):
-        raise NotImplementedError
-    def to_dXSMats(self):
+    def to_dSmat(self):
+        newItem = self._createNewItem(self.units)
+        self._initNewItem(newItem)
+        for k,v in self.iteritems():
+            num = mfu.nw.identity(mfu.nw.shape(v)[0]) + 1.j*v
+            denum = mfu.nw.identity(mfu.nw.shape(v)[0]) - 1.j*v
+            newItem[k] = num / denum
+        return newItem
+    def to_dXSmat(self):
         raise NotImplementedError
 
 class dTmat(dMat):
-    def to_dSMats(self):
+    def to_dSmat(self):
         raise NotImplementedError
-    def to_dKMats(self):
+    def to_dKmat(self):
         raise NotImplementedError
-    def to_dXSMats(self):
+    def to_dXSmat(self):
         raise NotImplementedError
 
 

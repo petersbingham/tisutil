@@ -17,7 +17,7 @@ class test_StoT(unittest.TestCase):
     def runTest(self):
         useMpmathTypes()
         d1 = dumMats.rowOffsetColGain_zeroImag_Smat()
-        d1.to_dTMats()
+        d1.to_dTmat()
         usePythonTypes()
 
 if __name__ == "__main__":
