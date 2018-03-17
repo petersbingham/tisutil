@@ -44,6 +44,8 @@ class dMat(mfu.dMat, dBase):
 
 
 class dSmat(dMat):
+    def to_dSmat(self):
+        return self
     def to_dTmat(self):
         newItem = self._createNewItem(self.units)
         self._initNewItem(newItem)
@@ -52,6 +54,7 @@ class dSmat(dMat):
         return newItem
     def to_dKmat(self):
         raise NotImplementedError
+
     def to_dXSmat(self):
         raise NotImplementedError
     def to_dEPhaseMat(self):
@@ -60,8 +63,6 @@ class dSmat(dMat):
         raise NotImplementedError
 
 class dKmat(dMat):
-    def to_dTmat(self):
-        raise NotImplementedError
     def to_dSmat(self):
         newItem = self._createNewItem(self.units)
         self._initNewItem(newItem)
@@ -70,17 +71,32 @@ class dKmat(dMat):
             denum = mfu.nw.identity(mfu.nw.shape(v)[0]) - 1.j*v
             newItem[k] = num / denum
         return newItem
+    def to_dTmat(self):
+        raise NotImplementedError
+    def to_dKmat(self):
+        return self
+
     def to_dXSmat(self):
+        raise NotImplementedError
+    def to_dEPhaseMat(self):
+        raise NotImplementedError
+    def to_dUniOpMat(self):
         raise NotImplementedError
 
 class dTmat(dMat):
     def to_dSmat(self):
         raise NotImplementedError
+    def to_dTmat(self):
+        raise NotImplementedError
     def to_dKmat(self):
         raise NotImplementedError
+
     def to_dXSmat(self):
         raise NotImplementedError
-
+    def to_dEPhaseMat(self):
+        raise NotImplementedError
+    def to_dUniOpMat(self):
+        raise NotImplementedError
 
 def usePythonTypes_d(dps=mfu.nw.dps_default_python):
     mfu.usePythonTypes(dps)
