@@ -6,7 +6,7 @@ shutil.copy('README.md', 'tisutil/README.md')
 
 setup(name='tisutil',
       version='0.4',
-      description='Utilities related to the scattering quantities',
+      description='Extension of matfuncutil for scattering matrices and other quantities.',
       author="Peter Bingham",
       author_email="petersbingham@hotmail.co.uk",
       packages=['tisutil'],

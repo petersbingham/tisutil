@@ -1,5 +1,5 @@
 # scatteringutil
-Utilities related to the scattering quantities.
+Extension of matfuncutil for scattering matrices and other quantities.
 
 ## Installation
 
