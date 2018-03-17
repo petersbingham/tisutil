@@ -10,5 +10,5 @@ setup(name='tisutil',
       author="Peter Bingham",
       author_email="petersbingham@hotmail.co.uk",
       packages=['tisutil'],
-      package_data={'tisutil': ['tests/*', 'README.md'],
+      package_data={'tisutil': ['tests/*', 'README.md']}
      )
