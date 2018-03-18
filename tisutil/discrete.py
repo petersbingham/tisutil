@@ -34,6 +34,9 @@ class dBase:
             newItem[k*fac] = v
         return newItem
 
+class dVal(mfu.dVal, dBase):
+    pass
+
 class dVec(mfu.dVec, dBase):
     def _getReductionContainer(self):
         return dVal(units=self.units)
@@ -44,10 +47,14 @@ class dMat(mfu.dMat, dBase):
 
 
 class dSmat(dMat):
+    def __init__(self, d={}, units=None):
+        mfu.dBase.__init__(self, d, units)
+        self.chartTitle = "S matrix"
+
     def to_dSmat(self):
         return self
     def to_dTmat(self):
-        newItem = self._createNewItem(self.units)
+        newItem = self._createNewItem(self.units, newType=dTmat)
         self._initNewItem(newItem)
         for k,v in self.iteritems():
             newItem[k] = v - mfu.nw.identity(mfu.nw.shape(v)[0])
@@ -63,8 +70,12 @@ class dSmat(dMat):
         raise NotImplementedError
 
 class dKmat(dMat):
+    def __init__(self, d={}, units=None):
+        mfu.dBase.__init__(self, d, units)
+        self.chartTitle = "K matrix"
+
     def to_dSmat(self):
-        newItem = self._createNewItem(self.units)
+        newItem = self._createNewItem(self.units, newType=dSmat)
         self._initNewItem(newItem)
         for k,v in self.iteritems():
             num = mfu.nw.identity(mfu.nw.shape(v)[0]) + 1.j*v
@@ -84,6 +95,10 @@ class dKmat(dMat):
         raise NotImplementedError
 
 class dTmat(dMat):
+    def __init__(self, d={}, units=None):
+        mfu.dBase.__init__(self, d, units)
+        self.chartTitle = "T matrix"
+
     def to_dSmat(self):
         raise NotImplementedError
     def to_dTmat(self):
