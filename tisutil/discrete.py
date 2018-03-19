@@ -113,8 +113,24 @@ class dTmat(dMat):
     def to_dUniOpMat(self):
         raise NotImplementedError
 
+mat_type_S = 0
+mat_type_K = 1
+mat_type_T = 2
+def getDiscreteScatteringMatrix(matType, matDict, units):
+    if matType == mat_type_S:
+        return dSmat(matDict, units)
+    elif matType == mat_type_K:
+        return dKmat(matDict, units)
+    elif matType == mat_type_T:
+        return dTmat(matDict, units)
+    else:
+        raise Exception("Non-recognised matrix type.")
+
 def usePythonTypes_d(dps=mfu.nw.dps_default_python):
     mfu.usePythonTypes(dps)
 
 def useMpmathTypes_d(dps=mfu.nw.dps_default_mpmath):
     mfu.useMpmathTypes(dps)
+
+def setTypeMode_d(mode, dps=None):
+    mfu.setTypeMode(mode, dps)
