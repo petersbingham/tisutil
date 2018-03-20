@@ -33,13 +33,3 @@ class cPolySmat(mfu.cPolyMat):
 
     def _getDiscreteContainer(self):
         return dSmat(units=self.units)
-
-
-def usePythonTypes_c(dps=mfu.nw.dps_default_python):
-    mfu.usePythonTypes(dps)
-
-def useMpmathTypes_c(dps=mfu.nw.dps_default_mpmath):
-    mfu.useMpmathTypes(dps)
-
-def setTypeMode_c(mode, dps=None):
-    mfu.setTypeMode(mode, dps)

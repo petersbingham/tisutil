@@ -125,12 +125,3 @@ def getDiscreteScatteringMatrix(matType, matDict, units):
         return dTmat(matDict, units)
     else:
         raise Exception("Non-recognised matrix type.")
-
-def usePythonTypes_d(dps=mfu.nw.dps_default_python):
-    mfu.usePythonTypes(dps)
-
-def useMpmathTypes_d(dps=mfu.nw.dps_default_mpmath):
-    mfu.useMpmathTypes(dps)
-
-def setTypeMode_d(mode, dps=None):
-    mfu.setTypeMode(mode, dps)
