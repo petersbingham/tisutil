@@ -1,4 +1,5 @@
 import tisutil as tu
+import channelutil as cu
 
 def rowOffsetColGain_zeroImag(sz=100):
     d = tu.dSmat()
@@ -16,7 +17,7 @@ def rowOffsetColGain_negImag(sz=100):
     return d
 
 def rowOffsetColGain_posNegImag(rg=10):
-    d = tu.dSmat(units=tu.RYDs)
+    d = tu.dSmat(asymCal=cu.asymCal(tu.RYDs,[0,0]))
     _rowOffsetColGain_posNegImag(d,rg)
     return d
 
