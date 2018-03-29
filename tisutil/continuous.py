@@ -28,7 +28,8 @@ def getContinuousScatteringMatrix(matType, funPtr, asymCal):
     else:
         raise Exception("Non-recognised matrix type.")
 
-class cPolySmat(mfu.cPolyMat):
+# k as in wavenumber, not K-matrix
+class cPolykmat(mfu.cPolyMat):
     def __init__(self, symMat, symVar, asymCal):
         mfu.cMat.__init__(self,
           lambda ene: mfu.nw.fromSympyMatrix(symMat.subs(symVar,
@@ -38,5 +39,6 @@ class cPolySmat(mfu.cPolyMat):
         self.symMat = symMat
         self.symVar = symVar
 
+class cPolySmat(cPolykmat):
     def _getDiscreteContainer(self):
         return dSmat(asymCal=self.asymCal)

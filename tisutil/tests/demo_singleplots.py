@@ -8,11 +8,11 @@ import dumMats
 a = dumMats.rowOffsetColGain_zeroImag()
 a.plot()
 
-b = a.reduce(0)
+b = a.createReducedDim(0)
 b.setChartTitle("Test title")
 b.plot(logx=True, logy=True)
 
-c = b.reduce(1)
+c = b.createReducedDim(1)
 c.setChartParameters(legPrefix="Test", xsize=10, ysize=10)
 c.plot(imag=True)
 

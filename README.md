@@ -64,7 +64,7 @@ The discrete container is indexed using the following rules:
  * If a float (either primitive python or mpmath) is provided then it's associated quantity is returned.
  * If a slice is provided then this is used to create a dictionary based on energies and associated quantities obtained from applying the slice to a sorted list of the energies.
 
-In addition, the helper function `base.calculateReductionIndices(self, startIndex, endIndex, numPoints, fromEnd=False)` is provided to calculate the slice indices given a start index, end index and number of points. An optional parameter is included to specify if this should be calculated from either the start or the end index. This is useful for example when a fit routine requires a specified number of data at equal steps over an indice range.  Here is a console demo of this functionality:
+In addition, the helper function `base.getSliceIndices(self, startIndex, endIndex, numPoints, fromEnd=False)` is provided to calculate the slice indices given a start index, end index and number of points. An optional parameter is included to specify if this should be calculated from either the start or the end index. This is useful for example when a fit routine requires a specified number of data at equal steps over an indice range.  Here is a console demo of this functionality:
 
 ```python
 >>> from scatteringutil.discrete import *
@@ -75,7 +75,7 @@ In addition, the helper function `base.calculateReductionIndices(self, startInde
 (10.0, 20.0)
 >>> v[10.]
 20.0
->>> slice,energies = v.calculateReductionIndices(0,6,3)
+>>> slice,energies = v.getSliceIndices(0,6,3)
 >>> slice
 (0, 7, 3)
 >>> energies
