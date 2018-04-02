@@ -1,5 +1,4 @@
 import matfuncutil as mfu
-import channelutil as cu
 from channelutil.units import *
 import copy
 
@@ -46,9 +45,9 @@ class dVec(mfu.dVec, dBase):
         return dVal(units=self.units)
 
 class dMat(mfu.dMat, dBase):
-    def __init__(self, d={}, asymCal=None):
+    def __init__(self, d={}, asymCal=None, sourceStr=""):
         mfu.dMat.__init__(self, d, 
-                          None if asymCal is None else asymCal.getUnits())
+                          None if asymCal is None else asymCal.getUnits(), sourceStr)
         self.asymCal = asymCal
     def _getReductionContainer(self):
         return dVec(units=self.units)
@@ -57,11 +56,13 @@ class dMat(mfu.dMat, dBase):
             asymCal = self.asymCal
         if newType is None:
             newType = type(self)
-        return newType(asymCal=asymCal)
+        newItem = newType(asymCal=asymCal)
+        newItem.sourceStr = self.sourceStr
+        return newItem
 
 class dSmat(dMat):
-    def __init__(self, d={}, asymCal=None):
-        dMat.__init__(self, d, asymCal)
+    def __init__(self, d={}, asymCal=None, sourceStr=""):
+        dMat.__init__(self, d, asymCal, sourceStr)
         self.chartTitle = "S matrix"
 
     def to_dSmat(self):
@@ -83,8 +84,8 @@ class dSmat(dMat):
         raise NotImplementedError
 
 class dKmat(dMat):
-    def __init__(self, d={}, asymCal=None):
-        dMat.__init__(self, d, asymCal)
+    def __init__(self, d={}, asymCal=None, sourceStr=""):
+        dMat.__init__(self, d, asymCal, sourceStr)
         self.chartTitle = "K matrix"
 
     def to_dSmat(self):
@@ -108,8 +109,8 @@ class dKmat(dMat):
         raise NotImplementedError
 
 class dTmat(dMat):
-    def __init__(self, d={}, asymCal=None):
-        dMat.__init__(self, d, asymCal)
+    def __init__(self, d={}, asymCal=None, sourceStr=""):
+        dMat.__init__(self, d, asymCal, sourceStr)
         self.chartTitle = "T matrix"
 
     def to_dSmat(self):
@@ -129,12 +130,12 @@ class dTmat(dMat):
 Smat = 0
 Kmat = 1
 Tmat = 2
-def getDiscreteScatteringMatrix(matType, matDict, asymCal):
+def getDiscreteScatteringMatrix(matType, matDict, asymCal, sourceStr=""):
     if matType == Smat:
-        return dSmat(matDict, asymCal)
+        return dSmat(matDict, asymCal, sourceStr)
     elif matType == Kmat:
-        return dKmat(matDict, asymCal)
+        return dKmat(matDict, asymCal, sourceStr)
     elif matType == Tmat:
-        return dTmat(matDict, asymCal)
+        return dTmat(matDict, asymCal, sourceStr)
     else:
         raise Exception("Non-recognised matrix type.")

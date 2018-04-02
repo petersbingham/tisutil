@@ -1,9 +1,9 @@
 from discrete import *
 
 class cMat(mfu.cMat):
-    def __init__(self, funPtr, asymCal=None):
+    def __init__(self, funPtr, asymCal=None, sourceStr=""):
         mfu.cMat.__init__(self, funPtr, 
-                          None if asymCal is None else asymCal.getUnits())
+                          None if asymCal is None else asymCal.getUnits(), sourceStr)
         self.asymCal = asymCal
 
 class cSmat(cMat):
@@ -18,23 +18,23 @@ class cTmat(cMat):
     def _getDiscreteContainer(self):
         return dTmat(asymCal=self.asymCal)
 
-def getContinuousScatteringMatrix(matType, funPtr, asymCal):
+def getContinuousScatteringMatrix(matType, funPtr, asymCal, sourceStr=""):
     if matType == Smat:
-        return cSmat(funPtr, asymCal)
+        return cSmat(funPtr, asymCal, sourceStr)
     elif matType == Kmat:
-        return cKmat(funPtr, asymCal)
+        return cKmat(funPtr, asymCal, sourceStr)
     elif matType == Tmat:
-        return cTmat(funPtr, asymCal)
+        return cTmat(funPtr, asymCal, sourceStr)
     else:
         raise Exception("Non-recognised matrix type.")
 
 # k as in wavenumber, not K-matrix
 class cPolykmat(mfu.cPolyMat):
-    def __init__(self, symMat, symVar, asymCal):
+    def __init__(self, symMat, symVar, asymCal, sourceStr=""):
         mfu.cMat.__init__(self,
           lambda ene: mfu.nw.fromSympyMatrix(symMat.subs(symVar,
                                                          asymCal.fk(ene))),
-          asymCal.getUnits())
+          asymCal.getUnits(), sourceStr)
         self.asymCal = asymCal
         self.symMat = symMat
         self.symVar = symVar
