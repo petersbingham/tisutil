@@ -49,6 +49,8 @@ class dMat(mfu.dMat, dBase):
         mfu.dMat.__init__(self, d, 
                           None if asymCal is None else asymCal.getUnits(), sourceStr)
         self.asymCal = asymCal
+    def getCheckStr(self):
+        return mfu.dMat.getCheckStr(self) + "\n" + str(self.asymCal)
     def _getReductionContainer(self):
         return dVec(units=self.units)
     def _createNewItem(self, asymCal=None, newType=None):
