@@ -96,7 +96,7 @@ class dKmat(dMat):
         for k,v in self.iteritems():
             num = mfu.nw.identity(mfu.nw.shape(v)[0]) + 1.j*v
             denum = mfu.nw.identity(mfu.nw.shape(v)[0]) - 1.j*v
-            newItem[k] = num / denum
+            newItem[k] = mfu.nw.dot(num, mfu.nw.invert(denum))
         return newItem
     def to_dTmat(self):
         raise NotImplementedError
