@@ -40,6 +40,11 @@ class dBase:
 class dVal(mfu.dVal, dBase):
     pass
 
+class dTotXSval(dVal):
+    def __init__(self, d={}, units=None, sourceStr=""):
+        dVal.__init__(self, d, units, sourceStr)
+        self.chartTitle = "Total Cross Section"
+
 class dVec(mfu.dVec, dBase):
     def _getReductionContainer(self):
         return dVal(units=self.units)
@@ -47,7 +52,8 @@ class dVec(mfu.dVec, dBase):
 class dMat(mfu.dMat, dBase):
     def __init__(self, d={}, asymCal=None, sourceStr=""):
         mfu.dMat.__init__(self, d, 
-                          None if asymCal is None else asymCal.getUnits(), sourceStr)
+                          None if asymCal is None else asymCal.getUnits(), 
+                          sourceStr)
         self.asymCal = asymCal
     def getCheckStr(self):
         return mfu.dMat.getCheckStr(self) + "\n" + str(self.asymCal)
@@ -58,8 +64,7 @@ class dMat(mfu.dMat, dBase):
             asymCal = self.asymCal
         if newType is None:
             newType = type(self)
-        newItem = newType(asymCal=asymCal)
-        newItem.sourceStr = self.sourceStr
+        newItem = newType(asymCal=asymCal, sourceStr=self.sourceStr)
         return newItem
 
 class dSmat(dMat):
@@ -74,13 +79,13 @@ class dSmat(dMat):
         self._initNewItem(newItem)
         for key in self:
             val = self[key] # force fun eval if relevant
-            newItem[key] = val - mfu.nw.identity(mfu.nw.shape(val)[0])
+            newItem[key] = (mfu.nw.identity(mfu.nw.shape(val)[0]) - val)/2.
         return newItem
     def to_dKmat(self):
         raise NotImplementedError
 
     def to_dXSmat(self):
-        raise NotImplementedError
+        return self.to_dTmat().to_dXSmat()
     def to_dEPhaseMat(self):
         raise NotImplementedError
     def to_dUniOpMat(self):
@@ -101,12 +106,19 @@ class dKmat(dMat):
             newItem[key] = mfu.nw.dot(num, mfu.nw.invert(denum))
         return newItem
     def to_dTmat(self):
-        raise NotImplementedError
+        newItem = self._createNewItem(self.asymCal, newType=dTmat)
+        self._initNewItem(newItem)
+        for key in self:
+            val = self[key] # force fun eval if relevant
+            num = val
+            denum = 1.j*mfu.nw.identity(mfu.nw.shape(val)[0]) + val
+            newItem[key] = mfu.nw.dot(num, mfu.nw.invert(denum))
+        return newItem
     def to_dKmat(self):
         return self
 
     def to_dXSmat(self):
-        raise NotImplementedError
+        return self.to_dTmat().to_dXSmat()
     def to_dEPhaseMat(self):
         raise NotImplementedError
     def to_dUniOpMat(self):
@@ -120,16 +132,38 @@ class dTmat(dMat):
     def to_dSmat(self):
         raise NotImplementedError
     def to_dTmat(self):
-        raise NotImplementedError
+        return self
     def to_dKmat(self):
         raise NotImplementedError
 
     def to_dXSmat(self):
-        raise NotImplementedError
+        newItem = self._createNewItem(self.asymCal, newType=dXSmat)
+        self._initNewItem(newItem)
+        for key in self:
+            val = self[key] # force fun eval if relevant
+            def elementFunction(_, j, elVal):
+                k = self.asymCal.k(j, elVal)
+                a = mfu.nw.pi/(2.*mfu.nw.pow(k,2.))
+                b = mfu.nw.pow(mfu.nw.abs(elVal),2.)
+                return a * b
+            newItem[key] = mfu.nw.applyFunToElements(val, elementFunction)
+        return newItem
     def to_dEPhaseMat(self):
         raise NotImplementedError
     def to_dUniOpMat(self):
         raise NotImplementedError
+
+class dXSmat(dMat):
+    def __init__(self, d={}, asymCal=None, sourceStr=""):
+        dMat.__init__(self, d, asymCal, sourceStr)
+        self.chartTitle = "Cross Section"
+    def to_dTotXSval(self):
+        newItem = dTotXSval(units=self.units, sourceStr=self.sourceStr)
+        self._initNewItem(newItem)
+        for key in self:
+            val = self[key] # force fun eval if relevant
+            newItem[key] = mfu.nw.sumElements(val)
+        return newItem
 
 Smat = 0
 Kmat = 1
