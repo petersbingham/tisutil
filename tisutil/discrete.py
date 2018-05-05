@@ -33,8 +33,8 @@ class dBase:
         newAsymCalc.units = newUnits
         newItem = self._createNewItem(newAsymCalc)
         self._initNewItem(newItem)
-        for key,val in self.iteritems():
-            newItem[key*fac] = val
+        for ene,val in self.iteritems():
+            newItem[ene*fac] = val
         return newItem
 
 class dVal(mfu.dVal, dBase):
@@ -77,9 +77,9 @@ class dSmat(dMat):
     def to_dTmat(self):
         newItem = self._createNewItem(self.asymCal, newType=dTmat)
         self._initNewItem(newItem)
-        for key in self:
-            val = self[key] # force fun eval if relevant
-            newItem[key] = (mfu.nw.identity(mfu.nw.shape(val)[0]) - val)/2.
+        for ene in self:
+            val = self[ene] # force fun eval if relevant
+            newItem[ene] = mfu.nw.identity(mfu.nw.shape(val)[0]) - val
         return newItem
     def to_dKmat(self):
         raise NotImplementedError
@@ -99,20 +99,20 @@ class dKmat(dMat):
     def to_dSmat(self):
         newItem = self._createNewItem(self.asymCal, newType=dSmat)
         self._initNewItem(newItem)
-        for key in self:
-            val = self[key] # force fun eval if relevant
+        for ene in self:
+            val = self[ene] # force fun eval if relevant
             num = mfu.nw.identity(mfu.nw.shape(val)[0]) + 1.j*val
             denum = mfu.nw.identity(mfu.nw.shape(val)[0]) - 1.j*val
-            newItem[key] = mfu.nw.dot(num, mfu.nw.invert(denum))
+            newItem[ene] = mfu.nw.dot(num, mfu.nw.invert(denum))
         return newItem
     def to_dTmat(self):
         newItem = self._createNewItem(self.asymCal, newType=dTmat)
         self._initNewItem(newItem)
-        for key in self:
-            val = self[key] # force fun eval if relevant
-            num = val
-            denum = 1.j*mfu.nw.identity(mfu.nw.shape(val)[0]) + val
-            newItem[key] = mfu.nw.dot(num, mfu.nw.invert(denum))
+        for ene in self:
+            val = self[ene] # force fun eval if relevant
+            num = 2.j*val
+            denum = mfu.nw.identity(mfu.nw.shape(val)[0]) - 1.j*val
+            newItem[ene] = mfu.nw.dot(num, mfu.nw.invert(denum))
         return newItem
     def to_dKmat(self):
         return self
@@ -139,14 +139,14 @@ class dTmat(dMat):
     def to_dXSmat(self):
         newItem = self._createNewItem(self.asymCal, newType=dXSmat)
         self._initNewItem(newItem)
-        for key in self:
-            val = self[key] # force fun eval if relevant
+        for ene in self:
+            val = self[ene] # force fun eval if relevant
             def elementFunction(_, j, elVal):
-                k = self.asymCal.k(j, elVal)
-                a = mfu.nw.pi/(2.*mfu.nw.pow(k,2.))
+                k = self.asymCal.k(j, ene)
+                a = mfu.nw.pi/mfu.nw.pow(k,2.)
                 b = mfu.nw.pow(mfu.nw.abs(elVal),2.)
                 return a * b
-            newItem[key] = mfu.nw.applyFunToElements(val, elementFunction)
+            newItem[ene] = mfu.nw.applyFunToElements(val, elementFunction)
         return newItem
     def to_dEPhaseMat(self):
         raise NotImplementedError
@@ -160,9 +160,9 @@ class dXSmat(dMat):
     def to_dTotXSval(self):
         newItem = dTotXSval(units=self.units, sourceStr=self.sourceStr)
         self._initNewItem(newItem)
-        for key in self:
-            val = self[key] # force fun eval if relevant
-            newItem[key] = mfu.nw.sumElements(val)
+        for ene in self:
+            val = self[ene] # force fun eval if relevant
+            newItem[ene] = mfu.nw.sumElements(val)
         return newItem
 
 Smat = 0
