@@ -29,9 +29,7 @@ class dBase:
                 raise Exception("Unknown conversion")
         else:
             raise Exception("Unknown conversion")
-        newAsymCalc = copy.deepcopy(self.asymCal)
-        newAsymCalc.units = newUnits
-        newItem = self._createNewItem(newAsymCalc)
+        newItem = self._createNewItem(units=newUnits)
         self._initNewItem(newItem)
         for ene,val in self.iteritems():
             newItem[ene*fac] = val
@@ -59,9 +57,10 @@ class dMat(mfu.dMat, dBase):
         return mfu.dMat.getCheckStr(self) + "\n" + str(self.asymCal)
     def _getReductionContainer(self):
         return dVec(units=self.units)
-    def _createNewItem(self, asymCal=None, newType=None):
-        if asymCal is None:
-            asymCal = self.asymCal
+    def _createNewItem(self, units=None, newType=None):
+        asymCal = copy.deepcopy(self.asymCal)
+        if units is not None:
+            asymCal.units = units
         if newType is None:
             newType = type(self)
         newItem = newType(asymCal=asymCal, sourceStr=self.sourceStr)
@@ -75,7 +74,7 @@ class dSmat(dMat):
     def to_dSmat(self):
         return self
     def to_dTmat(self):
-        newItem = self._createNewItem(self.asymCal, newType=dTmat)
+        newItem = self._createNewItem(newType=dTmat)
         self._initNewItem(newItem)
         for ene in self:
             val = self[ene] # force fun eval if relevant
@@ -97,7 +96,7 @@ class dKmat(dMat):
         self.chartTitle = "K matrix"
 
     def to_dSmat(self):
-        newItem = self._createNewItem(self.asymCal, newType=dSmat)
+        newItem = self._createNewItem(newType=dSmat)
         self._initNewItem(newItem)
         for ene in self:
             val = self[ene] # force fun eval if relevant
@@ -106,7 +105,7 @@ class dKmat(dMat):
             newItem[ene] = mfu.nw.dot(num, mfu.nw.invert(denum))
         return newItem
     def to_dTmat(self):
-        newItem = self._createNewItem(self.asymCal, newType=dTmat)
+        newItem = self._createNewItem(newType=dTmat)
         self._initNewItem(newItem)
         for ene in self:
             val = self[ene] # force fun eval if relevant
@@ -137,7 +136,7 @@ class dTmat(dMat):
         raise NotImplementedError
 
     def to_dXSmat(self):
-        newItem = self._createNewItem(self.asymCal, newType=dXSmat)
+        newItem = self._createNewItem(newType=dXSmat)
         self._initNewItem(newItem)
         for ene in self:
             val = self[ene] # force fun eval if relevant
