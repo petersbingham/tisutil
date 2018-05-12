@@ -1,44 +1,45 @@
 from discrete import *
 
 class cMat(mfu.cMat):
-    def __init__(self, funPtr, asymcalc=None, sourceStr=""):
-        mfu.cMat.__init__(self, funPtr, 
-                          None if asymcalc is None else asymcalc.getUnits(), sourceStr)
+    def __init__(self, fun_ref, asymcalc=None, source_str=""):
+        mfu.cMat.__init__(self, fun_ref, 
+                          None if asymcalc is None else asymcalc.get_units(),
+                          source_str)
         self.asymcalc = asymcalc
 
 class cSmat(cMat):
-    def _getDiscreteContainer(self):
+    def _get_discrete_container(self):
         return dSmat(asymcalc=self.asymcalc)
 
 class cKmat(cMat):
-    def _getDiscreteContainer(self):
+    def _get_discrete_container(self):
         return dKmat(asymcalc=self.asymcalc)
 
 class cTmat(cMat):
-    def _getDiscreteContainer(self):
+    def _get_discrete_container(self):
         return dTmat(asymcalc=self.asymcalc)
 
-def getContinuousScatteringMatrix(matType, funPtr, asymcalc, sourceStr=""):
-    if matType == Smat:
-        return cSmat(funPtr, asymcalc, sourceStr)
-    elif matType == Kmat:
-        return cKmat(funPtr, asymcalc, sourceStr)
-    elif matType == Tmat:
-        return cTmat(funPtr, asymcalc, sourceStr)
+def get_continuous_scattering_matrix(mat_type, fun_ref, asymcalc, source_str=""):
+    if mat_type == Smat:
+        return cSmat(fun_ref, asymcalc, source_str)
+    elif mat_type == Kmat:
+        return cKmat(fun_ref, asymcalc, source_str)
+    elif mat_type == Tmat:
+        return cTmat(fun_ref, asymcalc, source_str)
     else:
         raise Exception("Non-recognised matrix type.")
 
 # k as in wavenumber, not K-matrix
 class cPolykmat(mfu.cPolyMat):
-    def __init__(self, symMat, symVar, asymcalc, sourceStr=""):
+    def __init__(self, sym_mat, sym_var, asymcalc, source_str=""):
         mfu.cMat.__init__(self,
-          lambda ene: mfu.nw.fromSympyMatrix(symMat.subs(symVar,
-                                                         asymcalc.fk(ene))),
-          asymcalc.getUnits(), sourceStr)
+          lambda ene: mfu.nw.from_sympy_matrix(sym_mat.subs(sym_var,
+                                                            asymcalc.fk(ene))),
+          asymcalc.get_units(), source_str)
         self.asymcalc = asymcalc
-        self.symMat = symMat
-        self.symVar = symVar
+        self.sym_mat = sym_mat
+        self.sym_var = sym_var
 
 class cPolySmat(cPolykmat):
-    def _getDiscreteContainer(self):
+    def _get_discrete_container(self):
         return dSmat(asymcalc=self.asymcalc)
