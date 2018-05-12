@@ -48,27 +48,27 @@ class dVec(mfu.dVec, dBase):
         return dVal(units=self.units)
 
 class dMat(mfu.dMat, dBase):
-    def __init__(self, d={}, asymCal=None, sourceStr=""):
+    def __init__(self, d={}, asymcalc=None, sourceStr=""):
         mfu.dMat.__init__(self, d, 
-                          None if asymCal is None else asymCal.getUnits(), 
+                          None if asymcalc is None else asymcalc.getUnits(), 
                           sourceStr)
-        self.asymCal = asymCal
+        self.asymcalc = asymcalc
     def getCheckStr(self):
-        return mfu.dMat.getCheckStr(self) + "\n" + str(self.asymCal)
+        return mfu.dMat.getCheckStr(self) + "\n" + str(self.asymcalc)
     def _getReductionContainer(self):
         return dVec(units=self.units)
     def _createNewItem(self, units=None, newType=None):
-        asymCal = copy.deepcopy(self.asymCal)
+        asymcalc = copy.deepcopy(self.asymcalc)
         if units is not None:
-            asymCal.units = units
+            asymcalc.units = units
         if newType is None:
             newType = type(self)
-        newItem = newType(asymCal=asymCal, sourceStr=self.sourceStr)
+        newItem = newType(asymcalc=asymcalc, sourceStr=self.sourceStr)
         return newItem
 
 class dSmat(dMat):
-    def __init__(self, d={}, asymCal=None, sourceStr=""):
-        dMat.__init__(self, d, asymCal, sourceStr)
+    def __init__(self, d={}, asymcalc=None, sourceStr=""):
+        dMat.__init__(self, d, asymcalc, sourceStr)
         self.chartTitle = "S matrix"
 
     def to_dSmat(self):
@@ -91,8 +91,8 @@ class dSmat(dMat):
         raise NotImplementedError
 
 class dKmat(dMat):
-    def __init__(self, d={}, asymCal=None, sourceStr=""):
-        dMat.__init__(self, d, asymCal, sourceStr)
+    def __init__(self, d={}, asymcalc=None, sourceStr=""):
+        dMat.__init__(self, d, asymcalc, sourceStr)
         self.chartTitle = "K matrix"
 
     def to_dSmat(self):
@@ -124,8 +124,8 @@ class dKmat(dMat):
         raise NotImplementedError
 
 class dTmat(dMat):
-    def __init__(self, d={}, asymCal=None, sourceStr=""):
-        dMat.__init__(self, d, asymCal, sourceStr)
+    def __init__(self, d={}, asymcalc=None, sourceStr=""):
+        dMat.__init__(self, d, asymcalc, sourceStr)
         self.chartTitle = "T matrix"
 
     def to_dSmat(self):
@@ -141,7 +141,7 @@ class dTmat(dMat):
         for ene in self:
             val = self[ene] # force fun eval if relevant
             def elementFunction(_, j, elVal):
-                k = self.asymCal.k(j, ene)
+                k = self.asymcalc.k(j, ene)
                 a = mfu.nw.pi/mfu.nw.pow(k,2.)
                 b = mfu.nw.pow(mfu.nw.abs(elVal),2.)
                 return a * b
@@ -153,8 +153,8 @@ class dTmat(dMat):
         raise NotImplementedError
 
 class dXSmat(dMat):
-    def __init__(self, d={}, asymCal=None, sourceStr=""):
-        dMat.__init__(self, d, asymCal, sourceStr)
+    def __init__(self, d={}, asymcalc=None, sourceStr=""):
+        dMat.__init__(self, d, asymcalc, sourceStr)
         self.chartTitle = "Cross Section"
     def to_dTotXSval(self):
         newItem = dTotXSval(units=self.units, sourceStr=self.sourceStr)
@@ -167,12 +167,12 @@ class dXSmat(dMat):
 Smat = 0
 Kmat = 1
 Tmat = 2
-def getDiscreteScatteringMatrix(matType, matDict, asymCal, sourceStr=""):
+def getDiscreteScatteringMatrix(matType, matDict, asymcalc, sourceStr=""):
     if matType == Smat:
-        return dSmat(matDict, asymCal, sourceStr)
+        return dSmat(matDict, asymcalc, sourceStr)
     elif matType == Kmat:
-        return dKmat(matDict, asymCal, sourceStr)
+        return dKmat(matDict, asymcalc, sourceStr)
     elif matType == Tmat:
-        return dTmat(matDict, asymCal, sourceStr)
+        return dTmat(matDict, asymcalc, sourceStr)
     else:
         raise Exception("Non-recognised matrix type.")

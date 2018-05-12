@@ -17,7 +17,7 @@ def rowOffsetColGain_negImag(sz=100):
     return d
 
 def rowOffsetColGain_posNegImag(rg=10):
-    d = tu.dSmat(asymCal=cu.asymCal(tu.RYDs,[0,0]))
+    d = tu.dSmat(asymcalc=cu.AsymCalc(tu.RYDs,[0,0]))
     _rowOffsetColGain_posNegImag(d,rg)
     return d
 
