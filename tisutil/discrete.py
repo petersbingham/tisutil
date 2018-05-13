@@ -6,34 +6,34 @@ class dBase:
     def convert_units(self, new_units):
         if new_units == self.units:
             return self
-        elif self.units==RYDs:
-            if new_units==HARTs:
-                fac = RYD_to_HART
+        elif self.units==rydbergs:
+            if new_units==hartrees:
+                fac = rydbergs_to_hartrees
             elif new_units==eVs:
-                fac = RYD_to_EV
+                fac = rydbergs_to_eVs
             else:
                 raise Exception("Unknown conversion")
-        elif self.units==HARTs:
-            if new_units==RYDs:
-                fac = 1./RYD_to_HART
+        elif self.units==hartrees:
+            if new_units==rydbergs:
+                fac = 1./rydbergs_to_hartrees
             elif new_units==eVs:
-                fac = HART_to_EV
+                fac = hartrees_to_eVs
             else:
                 raise Exception("Unknown conversion")
         elif self.units==eVs:
-            if new_units==RYDs:
-                fac = 1./RYD_to_EV
-            elif new_units==HARTs:
-                fac = 1./HART_to_EV
+            if new_units==rydbergs:
+                fac = 1./rydbergs_to_eVs
+            elif new_units==hartrees:
+                fac = 1./hartrees_to_eVs
             else:
                 raise Exception("Unknown conversion")
         else:
             raise Exception("Unknown conversion")
-        newItem = self._create_new_item(units=new_units)
-        self._init_new_item(newItem)
+        new_item = self._create_new_item(units=new_units)
+        self._init_new_item(new_item)
         for ene,val in self.iteritems():
-            newItem[ene*fac] = val
-        return newItem
+            new_item[ene*fac] = val
+        return new_item
 
 class dVal(mfu.dVal, dBase):
     pass
@@ -63,8 +63,8 @@ class dMat(mfu.dMat, dBase):
             asymcalc.units = units
         if newType is None:
             newType = type(self)
-        newItem = newType(asymcalc=asymcalc, source_str=self.source_str)
-        return newItem
+        new_item = newType(asymcalc=asymcalc, source_str=self.source_str)
+        return new_item
 
 class dSmat(dMat):
     def __init__(self, d={}, asymcalc=None, source_str=""):
@@ -74,12 +74,12 @@ class dSmat(dMat):
     def to_dSmat(self):
         return self
     def to_dTmat(self):
-        newItem = self._create_new_item(newType=dTmat)
-        self._init_new_item(newItem)
+        new_item = self._create_new_item(newType=dTmat)
+        self._init_new_item(new_item)
         for ene in self:
             val = self[ene] # force fun eval if relevant
-            newItem[ene] = mfu.nw.identity(mfu.nw.shape(val)[0]) - val
-        return newItem
+            new_item[ene] = mfu.nw.identity(mfu.nw.shape(val)[0]) - val
+        return new_item
     def to_dKmat(self):
         raise NotImplementedError
 
@@ -96,23 +96,23 @@ class dKmat(dMat):
         self.chart_title = "K matrix"
 
     def to_dSmat(self):
-        newItem = self._create_new_item(newType=dSmat)
-        self._init_new_item(newItem)
+        new_item = self._create_new_item(newType=dSmat)
+        self._init_new_item(new_item)
         for ene in self:
             val = self[ene] # force fun eval if relevant
             num = mfu.nw.identity(mfu.nw.shape(val)[0]) + 1.j*val
             denum = mfu.nw.identity(mfu.nw.shape(val)[0]) - 1.j*val
-            newItem[ene] = mfu.nw.dot(num, mfu.nw.invert(denum))
-        return newItem
+            new_item[ene] = mfu.nw.dot(num, mfu.nw.invert(denum))
+        return new_item
     def to_dTmat(self):
-        newItem = self._create_new_item(newType=dTmat)
-        self._init_new_item(newItem)
+        new_item = self._create_new_item(newType=dTmat)
+        self._init_new_item(new_item)
         for ene in self:
             val = self[ene] # force fun eval if relevant
             num = 2.j*val
             denum = mfu.nw.identity(mfu.nw.shape(val)[0]) - 1.j*val
-            newItem[ene] = mfu.nw.dot(num, mfu.nw.invert(denum))
-        return newItem
+            new_item[ene] = mfu.nw.dot(num, mfu.nw.invert(denum))
+        return new_item
     def to_dKmat(self):
         return self
 
@@ -136,8 +136,8 @@ class dTmat(dMat):
         raise NotImplementedError
 
     def to_dXSmat(self):
-        newItem = self._create_new_item(newType=dXSmat)
-        self._init_new_item(newItem)
+        new_item = self._create_new_item(newType=dXSmat)
+        self._init_new_item(new_item)
         for ene in self:
             val = self[ene] # force fun eval if relevant
             def elementFunction(_, j, elVal):
@@ -145,8 +145,8 @@ class dTmat(dMat):
                 a = mfu.nw.pi/mfu.nw.pow(k,2.)
                 b = mfu.nw.pow(mfu.nw.abs(elVal),2.)
                 return a * b
-            newItem[ene] = mfu.nw.apply_fun_to_elements(val, elementFunction)
-        return newItem
+            new_item[ene] = mfu.nw.apply_fun_to_elements(val, elementFunction)
+        return new_item
     def to_dEPhaseMat(self):
         raise NotImplementedError
     def to_dUniOpMat(self):
@@ -157,12 +157,12 @@ class dXSmat(dMat):
         dMat.__init__(self, d, asymcalc, source_str)
         self.chart_title = "Cross Section"
     def to_dTotXSval(self):
-        newItem = dTotXSval(units=self.units, source_str=self.source_str)
-        self._init_new_item(newItem)
+        new_item = dTotXSval(units=self.units, source_str=self.source_str)
+        self._init_new_item(new_item)
         for ene in self:
             val = self[ene] # force fun eval if relevant
-            newItem[ene] = mfu.nw.sum_elements(val)
-        return newItem
+            new_item[ene] = mfu.nw.sum_elements(val)
+        return new_item
 
 Smat = 0
 Kmat = 1

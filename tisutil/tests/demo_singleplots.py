@@ -3,9 +3,9 @@ import sys
 basedir = os.path.dirname(os.path.realpath(__file__))
 sys.path.insert(0,basedir+'/../..')
 
-import dumMats
+import dum_mats
 
-a = dumMats.row_offset_col_gain_zeroimag()
+a = dum_mats.row_offset_col_gain_zeroimag()
 a.plot()
 
 b = a.create_reduced_dim(0)
