@@ -1,6 +1,13 @@
 import tisutil as tu
 import channelutil as cu
 
+def unitary_matrix():
+    d = tu.dSmat()
+    d[1.] = tu.mfu.nw.matrix([[.5, -.5j, -.5+.5j],
+                              [.5j, .5, .5+.5j],
+                              [.5+.5j, -.5+.5j, 0]])
+    return d
+
 def row_offset_col_gain_zeroimag(sz=100):
     d = tu.dSmat()
     _row_offset_col_gain_zeroimag(d,sz)
@@ -24,6 +31,21 @@ def row_offset_col_gain_posNegImag(rg=10):
 def row_offset_col_gain_zeroimag_Smat(sz=100):
     d = tu.dSmat()
     _row_offset_col_gain_zeroimag(d,sz)
+    return d
+
+def row_offset_col_gain_zeroimag_Kmat(sz=100):
+    d = tu.dKmat()
+    _row_offset_col_gain_zeroimag(d,sz)
+    return d
+
+def row_offset_col_gain_zeroimag_Tmat(sz=100):
+    d = tu.dTmat()
+    _row_offset_col_gain_zeroimag(d,sz)
+    return d
+
+def row_offset_col_gain_posImag_Tmat(sz=100):
+    d = tu.dTmat()
+    _row_offset_col_gain_posImag(d,sz)
     return d
 
 
