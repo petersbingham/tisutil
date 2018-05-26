@@ -5,7 +5,7 @@ import shutil
 shutil.copy('README.md', 'tisutil/README.md')
 
 setup(name='tisutil',
-      version='0.23',
+      version='0.24',
       description='Extension of matfuncutil for scattering matrices and other quantities.',
       author="Peter Bingham",
       author_email="petersbingham@hotmail.co.uk",

@@ -30,7 +30,7 @@ def get_continuous_scattering_matrix(mat_type, fun_ref, asymcalc, source_str="")
         raise Exception("Non-recognised matrix type.")
 
 # k as in wavenumber, not K-matrix
-class cPolykmat(mfu.cPolyMat):
+class cPolykmat(mfu.cSympyPolyMat):
     def __init__(self, sym_mat, sym_var, asymcalc, source_str=""):
         mfu.cMat.__init__(self,
           lambda ene: mfu.nw.from_sympy_matrix(sym_mat.subs(sym_var,
