@@ -35,17 +35,17 @@ class dBase:
             new_item[ene*fac] = val
         return new_item
 
-class dVal(mfu.dVal, dBase):
+class dSca(mfu.dSca, dBase):
     pass
 
-class dTotXSval(dVal):
+class dTotXSval(dSca):
     def __init__(self, d={}, units=None, source_str=""):
-        dVal.__init__(self, d, units, source_str)
+        dSca.__init__(self, d, units, source_str)
         self.chart_title = "Total Cross Section"
 
 class dVec(mfu.dVec, dBase):
     def _get_reduction_container(self):
-        return dVal(units=self.units)
+        return dSca(units=self.units)
 
 class dMat(mfu.dMat, dBase):
     def __init__(self, d={}, asymcalc=None, source_str=""):
