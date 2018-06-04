@@ -140,11 +140,14 @@ class dTmat(dMat):
         self._init_new_item(new_item)
         for ene in self:
             val = self[ene] # force fun eval if relevant
-            def elementFunction(_, j, elVal):
-                k = self.asymcalc.k(j, ene)
+            def elementFunction(_, ch, el_val):
+                k = self.asymcalc.k(ch, ene)
                 a = mfu.nw.pi/mfu.nw.pow(k,2.)
-                b = mfu.nw.pow(mfu.nw.abs(elVal),2.)
-                return a * b
+                num = 2.*self.asymcalc.tot_spin() + 1.
+                denum = 2.*(2.*self.asymcalc.targ_spins(ch) + 1.)
+                b = num / denum
+                c = mfu.nw.pow(mfu.nw.abs(el_val),2.)
+                return a * b * c
             new_item[ene] = mfu.nw.apply_fun_to_elements(val, elementFunction)
         return new_item
     def to_dEPhaseMat(self):
