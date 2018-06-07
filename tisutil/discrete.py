@@ -38,7 +38,7 @@ class dBase:
 class dSca(mfu.dSca, dBase):
     pass
 
-class dTotXSval(dSca):
+class dTotXSsca(dSca):
     def __init__(self, d={}, units=None, source_str=""):
         dSca.__init__(self, d, units, source_str)
         self.chart_title = "Total Cross Section"
@@ -157,8 +157,8 @@ class dXSmat(dMat):
     def __init__(self, d={}, asymcalc=None, source_str=""):
         dMat.__init__(self, d, asymcalc, source_str)
         self.chart_title = "Cross Section"
-    def to_dTotXSval(self):
-        new_item = dTotXSval(units=self.units, source_str=self.source_str)
+    def to_dTotXSsca(self):
+        new_item = dTotXSsca(units=self.units, source_str=self.source_str)
         self._init_new_item(new_item)
         for ene in self:
             val = self[ene] # force fun eval if relevant
