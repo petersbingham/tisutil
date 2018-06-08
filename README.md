@@ -17,13 +17,13 @@ Author (these will have their own dependencies):
 
 ## Overview
 
-This package extends the containers in the matfuncutil [matfuncutil](https://github.com/petersbingham/matfuncutil) for the various scattering representations and provides common units and conversions. The provided discrete scattering matrix containers are `dSmat`, `dKmat`, `dTmat` and `dXSmat`. A scalar container, `dTotXSsca` is provided for total cross sections. Functions of the form `to_dSmat` etc are provided by the `dSmat`, `dKmat`, `dTmat` to easy allow conversions between the representations, as well as `to_dXSmat` to convert to the cross section matrix, which in turn provides `to_dTotXSsca` to calculate the total cross section. 
+This package extends the containers in the [matfuncutil](https://github.com/petersbingham/matfuncutil) for the various scattering representations and provides common units and conversions. The provided discrete scattering matrix containers are `dSmat`, `dKmat`, `dTmat` and `dXSmat`. A scalar container, `dTotXSsca` is provided for total cross sections. Functions of the form `to_dSmat` etc are provided by the `dSmat`, `dKmat`, `dTmat` to easy allow conversions between the representations, as well as `to_dXSmat` to convert to the cross section matrix, which in turn provides `to_dTotXSsca` to calculate the total cross section. 
 
 A continuous container is also provided, `cPolykmat`, which extends `matfuncutil.cSympyPolyMat` by allowing energy parametrisation using the `AsymCalc` object.
 
 ## Usage
 
-A useful illustration of tisutil is given in the matfuncutil documentation [matfuncutil](https://github.com/petersbingham/matfuncutil). We provide an additional example here to illustate the conversion between the different scattering representations. This example plots the K-matrix and total cross section for the two channel radial well (see [twochanradialwell](https://github.com/petersbingham/twochanradialwell)).
+A useful illustration of tisutil is given in the [matfuncutil documentation](https://github.com/petersbingham/matfuncutil). We provide an additional example here to illustate the conversion between the different scattering representations. This example plots the K-matrix and total cross section for the two channel radial well (see [twochanradialwell](https://github.com/petersbingham/twochanradialwell)).
 
 ```python
 import twochanradialwell as radwell
