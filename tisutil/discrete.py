@@ -138,6 +138,16 @@ class dSmat(dMat):
     def to_dEPhaseSca(self):
         return self.to_dEPhaseMat().to_dEPhaseSca()
 
+    def to_dQmat(self):
+        new_item = self._create_new_item(new_type=dQmat)
+        self._init_new_item(new_item)
+        smat_p = self.gradient()
+        for ene in self:
+            val = self[ene] # force fun eval if relevant
+            new_item[ene] = -1.j*mfu.nw.dot(smat_p[ene],
+                                            mfu.nw.dagger(val))
+        return new_item
+
     def to_dUniOpMat(self):
         return self.unitary_op()
 
@@ -172,6 +182,9 @@ class dKmat(dMat):
         return new_item
     def to_dEPhaseSca(self):
         return self.to_dEPhaseMat().to_dEPhaseSca()
+
+    def to_dQmat(self):
+        return self.to_dSmat().to_dQmat()
 
 class dTmat(dMat):
     def __init__(self, d=None, asymcalc=None, source_str=""):
@@ -211,6 +224,9 @@ class dTmat(dMat):
     def to_dEPhaseSca(self):
         return self.to_dEPhaseMat().to_dEPhaseSca()
 
+    def to_dQmat(self):
+        return self.to_dSmat().to_dQmat()
+
 class dEPhasemat(dMat):
     def __init__(self, d=None, asymcalc=None, source_str=""):
         dMat.__init__(self, d, asymcalc, "rad", "Eigenphase Matrix",
@@ -236,6 +252,17 @@ class dXSmat(dMat):
             val = self[ene] # force fun eval if relevant
             new_item[ene] = mfu.nw.sum_elements(val)
         return new_item
+
+# The Q-matrix calculation was developed against Zdenek Masin's time delay
+# fortran code. When comparing results generated with these two codes, under
+# normal circumstances, there will be a factor of two difference. This is
+# because in ZM's code Hartress are used for the energy differences and the
+# default here is Rydbergs (Rydbergs are the energy units for both codes). Look
+# for the _eV_conv variable in the time delay code.
+class dQmat(dMat):
+    def __init__(self, d=None, asymcalc=None, source_str=""):
+        dMat.__init__(self, d, asymcalc, None, "Q matrix", "Energy", "Q matrix",
+                      source_str)
 
 class dFin(dMat):
     def __init__(self, d=None, asymcalc=None, source_str=""):

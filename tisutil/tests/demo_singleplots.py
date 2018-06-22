@@ -33,3 +33,9 @@ h.plot()
 
 i = a[1:].to_dEPhaseSca()
 i.plot()
+
+j = a[1:].to_dQmat()
+j.plot()
+
+k = j.eigenvalues()
+k.plot()
