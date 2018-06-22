@@ -165,6 +165,11 @@ class dXSmat(dMat):
             new_item[ene] = mfu.nw.sum_elements(val)
         return new_item
 
+class dFin(dMat):
+    def __init__(self, d={}, asymcalc=None, source_str=""):
+        dMat.__init__(self, d, asymcalc, source_str)
+        self.chart_title = "Fin"
+
 Smat = 0
 Kmat = 1
 Tmat = 2

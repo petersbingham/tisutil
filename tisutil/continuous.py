@@ -40,6 +40,10 @@ class cPolykmat(mfu.cSympyPolyMat):
         self.sym_mat = sym_mat
         self.sym_var = sym_var
 
+class cPolyFin(cPolykmat):
+    def _get_discrete_container(self):
+        return dFin(asymcalc=self.asymcalc)
+
 class cPolySmat(cPolykmat):
     def _get_discrete_container(self):
         return dSmat(asymcalc=self.asymcalc)
