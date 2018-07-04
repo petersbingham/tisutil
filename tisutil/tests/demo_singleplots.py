@@ -18,3 +18,6 @@ c.plot(imag=True)
 
 d = a.trace()
 d.plot()
+
+e = a[1:].to_dXSmat().to_dTotXSsca()
+e.plot()

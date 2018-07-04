@@ -3,33 +3,33 @@ from channelutil.units import *
 import copy
 
 class dBase:
-    def convert_units(self, new_units):
-        if new_units == self.units:
+    def convert_ene_units(self, new_x_units):
+        if new_x_units == self.x_units:
             return self
-        elif self.units==rydbergs:
-            if new_units==hartrees:
+        elif self.x_units==rydbergs:
+            if new_x_units==hartrees:
                 fac = rydbergs_to_hartrees
-            elif new_units==eVs:
+            elif new_x_units==eVs:
                 fac = rydbergs_to_eVs
             else:
                 raise Exception("Unknown conversion")
-        elif self.units==hartrees:
-            if new_units==rydbergs:
+        elif self.x_units==hartrees:
+            if new_x_units==rydbergs:
                 fac = 1./rydbergs_to_hartrees
-            elif new_units==eVs:
+            elif new_x_units==eVs:
                 fac = hartrees_to_eVs
             else:
                 raise Exception("Unknown conversion")
-        elif self.units==eVs:
-            if new_units==rydbergs:
+        elif self.x_units==eVs:
+            if new_x_units==rydbergs:
                 fac = 1./rydbergs_to_eVs
-            elif new_units==hartrees:
+            elif new_x_units==hartrees:
                 fac = 1./hartrees_to_eVs
             else:
                 raise Exception("Unknown conversion")
         else:
             raise Exception("Unknown conversion")
-        new_item = self._create_new_item(units=new_units)
+        new_item = self._create_new_item(units=new_x_units)
         self._init_new_item(new_item)
         for ene,val in self.iteritems():
             new_item[ene*fac] = val
@@ -39,31 +39,39 @@ class dSca(mfu.dSca, dBase):
     pass
 
 class dTotXSsca(dSca):
-    def __init__(self, d={}, units=None, source_str=""):
-        dSca.__init__(self, d, units, source_str)
-        self.chart_title = "Total Cross Section"
+    def __init__(self, d=None, x_units=None, source_str=None):
+        y_units = "bohr^2"
+        x_plotlbl = "Energy"
+        y_plotlbl = "Total Cross Section"
+        chart_title = "Total Cross Section"
+        dSca.__init__(self, d, x_units, y_units, chart_title, x_plotlbl,
+                      y_plotlbl, source_str)
 
 class dVec(mfu.dVec, dBase):
     def _get_reduction_container(self):
-        return dSca(units=self.units)
+        return dSca({}, self.x_units, self.y_units, self.chart_title,
+                    self.x_plotlbl, self.y_plotlbl, self.source_str)
 
 class dMat(mfu.dMat, dBase):
-    def __init__(self, d={}, asymcalc=None, source_str=""):
+    def __init__(self, d=None, asymcalc=None, y_units=None, chart_title="",
+                 x_plotlbl="", y_plotlbl="", source_str=""):
         mfu.dMat.__init__(self, d, 
                           None if asymcalc is None else asymcalc.get_units(), 
+                          y_units, chart_title, x_plotlbl, y_plotlbl,
                           source_str)
         self.asymcalc = asymcalc
     def get_check_str(self):
         return mfu.dMat.get_check_str(self) + "\n" + str(self.asymcalc)
     def _get_reduction_container(self):
-        return dVec(units=self.units)
+        return dVec({}, self.x_units, self.y_units, self.chart_title,
+                    self.x_plotlbl, self.y_plotlbl, self.source_str)
     def _create_new_item(self, units=None, new_type=None):
         asymcalc = copy.deepcopy(self.asymcalc)
         if units is not None:
             asymcalc.units = units
         if new_type is None:
             new_type = type(self)
-        new_item = new_type(asymcalc=asymcalc, source_str=self.source_str)
+        new_item = new_type({}, asymcalc, self.source_str)
         return new_item
     def _I(self):
         return mfu.nw.identity(self._get_size())
@@ -79,9 +87,9 @@ class dMat(mfu.dMat, dBase):
         return new_item
 
 class dSmat(dMat):
-    def __init__(self, d={}, asymcalc=None, source_str=""):
-        dMat.__init__(self, d, asymcalc, source_str)
-        self.chart_title = "S matrix"
+    def __init__(self, d=None, asymcalc=None, source_str=""):
+        dMat.__init__(self, d, asymcalc, None, "S matrix", "Energy", "S matrix",
+                      source_str)
 
     def to_dSmat(self):
         return self
@@ -100,9 +108,9 @@ class dSmat(dMat):
         return self.unitary_op()
 
 class dKmat(dMat):
-    def __init__(self, d={}, asymcalc=None, source_str=""):
-        dMat.__init__(self, d, asymcalc, source_str)
-        self.chart_title = "K matrix"
+    def __init__(self, d=None, asymcalc=None, source_str=""):
+        dMat.__init__(self, d, asymcalc, None, "K matrix", "Energy", "K matrix",
+                      source_str)
 
     def to_dSmat(self):
         return self._convert(dSmat,
@@ -121,9 +129,9 @@ class dKmat(dMat):
         raise NotImplementedError
 
 class dTmat(dMat):
-    def __init__(self, d={}, asymcalc=None, source_str=""):
-        dMat.__init__(self, d, asymcalc, source_str)
-        self.chart_title = "T matrix"
+    def __init__(self, d=None, asymcalc=None, source_str=""):
+        dMat.__init__(self, d, asymcalc, None, "T matrix", "Energy", "T matrix",
+                      source_str)
 
     def to_dSmat(self):
         return self._convert(dSmat,
@@ -154,11 +162,12 @@ class dTmat(dMat):
         raise NotImplementedError
 
 class dXSmat(dMat):
-    def __init__(self, d={}, asymcalc=None, source_str=""):
-        dMat.__init__(self, d, asymcalc, source_str)
-        self.chart_title = "Cross Section"
+    def __init__(self, d=None, asymcalc=None, source_str=""):
+        dMat.__init__(self, d, asymcalc, "bohr^2", "Cross Section", "Energy",
+                      "Cross Section", source_str)
+
     def to_dTotXSsca(self):
-        new_item = dTotXSsca(units=self.units, source_str=self.source_str)
+        new_item = dTotXSsca({}, self.x_units, self.source_str)
         self._init_new_item(new_item)
         for ene in self:
             val = self[ene] # force fun eval if relevant
@@ -166,14 +175,13 @@ class dXSmat(dMat):
         return new_item
 
 class dFin(dMat):
-    def __init__(self, d={}, asymcalc=None, source_str=""):
-        dMat.__init__(self, d, asymcalc, source_str)
-        self.chart_title = "Fin"
+    def __init__(self, d=None, asymcalc=None, source_str=""):
+        dMat.__init__(self, d, asymcalc, None, "Fin", "Energy", "Fin", source_str)
 
 Smat = 0
 Kmat = 1
 Tmat = 2
-def get_discrete_scattering_matrix(mat_type, mat_dict, asymcalc, source_str=""):
+def get_discrete_scattering_matrix(mat_type, mat_dict, asymcalc, source_str):
     if mat_type == Smat:
         return dSmat(mat_dict, asymcalc, source_str)
     elif mat_type == Kmat:
