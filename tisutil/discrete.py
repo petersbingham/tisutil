@@ -38,12 +38,12 @@ class dBase:
 class dSca(mfu.dSca, dBase):
     pass
 
-class dTotXSsca(dSca):
+class dXSsca(dSca):
     def __init__(self, d=None, x_units=None, source_str=None):
-        y_units = "bohr^2"
+        y_units = "bohr$^2$"
         x_plotlbl = "Energy"
-        y_plotlbl = "Total Cross Section"
-        chart_title = "Total Cross Section"
+        y_plotlbl = "Cross Section"
+        chart_title = "Cross Section"
         dSca.__init__(self, d, x_units, y_units, chart_title, x_plotlbl,
                       y_plotlbl, source_str)
 
@@ -102,6 +102,8 @@ class dSmat(dMat):
                              lambda val: self._I() + val)
     def to_dXSmat(self):
         return self.to_dTmat().to_dXSmat()
+    def to_dXSsca(self):
+        return self.to_dXSmat().to_dXSsca()
     def to_dEPhaseMat(self):
         raise NotImplementedError
     def to_dUniOpMat(self):
@@ -125,6 +127,8 @@ class dKmat(dMat):
 
     def to_dXSmat(self):
         return self.to_dTmat().to_dXSmat()
+    def to_dXSsca(self):
+        return self.to_dXSmat().to_dXSsca()
     def to_dEPhaseMat(self):
         raise NotImplementedError
 
@@ -158,16 +162,18 @@ class dTmat(dMat):
                 return a * b * c
             new_item[ene] = mfu.nw.apply_fun_to_elements(val, elementFunction)
         return new_item
+    def to_dXSsca(self):
+        return self.to_dXSmat().to_dXSsca()
     def to_dEPhaseMat(self):
         raise NotImplementedError
 
 class dXSmat(dMat):
     def __init__(self, d=None, asymcalc=None, source_str=""):
-        dMat.__init__(self, d, asymcalc, "bohr^2", "Cross Section", "Energy",
+        dMat.__init__(self, d, asymcalc, "bohr$^2$", "Cross Section", "Energy",
                       "Cross Section", source_str)
 
-    def to_dTotXSsca(self):
-        new_item = dTotXSsca({}, self.x_units, self.source_str)
+    def to_dXSsca(self):
+        new_item = dXSsca({}, self.x_units, self.source_str)
         self._init_new_item(new_item)
         for ene in self:
             val = self[ene] # force fun eval if relevant
@@ -176,7 +182,8 @@ class dXSmat(dMat):
 
 class dFin(dMat):
     def __init__(self, d=None, asymcalc=None, source_str=""):
-        dMat.__init__(self, d, asymcalc, None, "Fin", "Energy", "Fin", source_str)
+        dMat.__init__(self, d, asymcalc, None, "Fin", "Energy", "Fin",
+                      source_str)
 
 Smat = 0
 Kmat = 1
