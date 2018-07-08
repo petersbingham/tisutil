@@ -32,7 +32,10 @@ class dBase:
         new_item = self._create_new_item(units=new_x_units)
         self._init_new_item(new_item)
         for ene,val in self.iteritems():
-            new_item[ene*fac] = val
+            if not callable(val):
+                new_item[ene*fac] = val
+            else:
+                new_item[ene*fac] = lambda new_ene: val(new_ene/fac)
         return new_item
 
 class dSca(mfu.dSca, dBase):
