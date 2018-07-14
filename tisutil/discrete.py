@@ -98,7 +98,7 @@ class dSmat(dMat):
         return self
     def to_dTmat(self):
         return self._convert(dTmat,
-                             lambda val: self._I() - val)
+                             lambda val: val - self._I())
     def to_dKmat(self):
         return self._convert(dKmat,
                              lambda val: 1.j*self._I() - 1.j*val,
@@ -142,7 +142,7 @@ class dTmat(dMat):
 
     def to_dSmat(self):
         return self._convert(dSmat,
-                             lambda val: self._I() - val)
+                             lambda val: val + self._I())
     def to_dTmat(self):
         return self
     def to_dKmat(self):
