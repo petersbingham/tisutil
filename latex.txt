@@ -1,0 +1,9 @@
+These can be used to generate the equations.jpg, which is used in the README.md.
+
+\begin{align*}
+K&=K                 & &=-i\frac{T}{2+T} & &=i\frac{1-S}{1+S}\\
+T&=\frac{2iK}{1-iK}  & &=T               & &=S-1\\
+S&=\frac{1+iK}{1-iK} & &=T+1             & &=S
+\end{align*}
+
+\sigma(i\rightarrow i')=\frac{\pi}{k^{2}_{i}}\sum_{S}\frac{2S+1}{2(2S_{i}+1)}\sum_{ll'}\left | T_{ili'l'} \right |^{2}

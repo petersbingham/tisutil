@@ -21,6 +21,9 @@ This package extends the containers in the [matfuncutil](https://github.com/pete
 
 A continuous container is also provided, `cMatSympypolyk`, which extends `matfuncutil.cMatSympypoly` by allowing energy parametrisation using the `AsymCalc` object.
 
+Conversions and cross sections are calculated as:
+![equations](https://github.com/petersbingham/tisutil/blob/master/equations.jpg)
+
 ## Usage
 
 A useful illustration of tisutil is given in the [matfuncutil documentation](https://github.com/petersbingham/matfuncutil). We provide an additional example here to illustate the conversion between the different scattering representations. This example plots the K-matrix and total cross section for the two channel radial well (see [twochanradialwell](https://github.com/petersbingham/twochanradialwell)).
