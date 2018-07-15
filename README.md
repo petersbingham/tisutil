@@ -21,7 +21,7 @@ This package extends the containers in the [matfuncutil](https://github.com/pete
 
 A continuous container is also provided, `cMatSympypolyk`, which extends `matfuncutil.cMatSympypoly` by allowing energy parametrisation using the `AsymCalc` object.
 
-Conversions and cross sections are calculated as:<br/>
+Conversions, cross sections and eigenphase sums are calculated as:<br/>
 
 ![equations](https://github.com/petersbingham/tisutil/blob/master/equations.jpg)
 

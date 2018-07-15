@@ -7,3 +7,5 @@ S&=\frac{1+iK}{1-iK} & &=T+1             & &=S
 \end{align*}
 
 \sigma(i\rightarrow i')=\frac{\pi}{k^{2}_{i}}\sum_{S}\frac{2S+1}{2(2S_{i}+1)}\sum_{ll'}\left | T_{ili'l'} \right |^{2}
+
+\delta_{sum}=\sum^{n_{ch}}_{i=1}\mathrm{arctan}\left[(K_{D})_{ii} \right ]

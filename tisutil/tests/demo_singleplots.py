@@ -24,3 +24,9 @@ e.plot()
 
 f = a[1:].to_dXSsca()
 f.plot()
+
+e = a[1:].to_dEPhaseMat().to_dEPhaseSca()
+e.plot()
+
+f = a[1:].to_dEPhaseSca()
+f.plot()

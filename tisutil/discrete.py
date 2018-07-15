@@ -50,6 +50,15 @@ class dXSsca(dSca):
         dSca.__init__(self, d, x_units, y_units, chart_title, x_plotlbl,
                       y_plotlbl, source_str)
 
+class dEPhaseSca(dSca):
+    def __init__(self, d=None, x_units=None, source_str=None):
+        y_units = "radians"
+        x_plotlbl = "Energy"
+        y_plotlbl = "Eigenphase Sum"
+        chart_title = "Eigenphase Sum"
+        dSca.__init__(self, d, x_units, y_units, chart_title, x_plotlbl,
+                      y_plotlbl, source_str)
+
 class dVec(mfu.dVec, dBase):
     def _get_reduction_container(self):
         return dSca({}, self.x_units, self.y_units, self.chart_title,
@@ -107,8 +116,12 @@ class dSmat(dMat):
         return self.to_dTmat().to_dXSmat()
     def to_dXSsca(self):
         return self.to_dXSmat().to_dXSsca()
+
     def to_dEPhaseMat(self):
-        raise NotImplementedError
+        return self.to_dKmat().to_dEPhaseMat()
+    def to_dEPhaseSca(self):
+        return self.to_dEPhaseMat().to_dEPhaseSca()
+
     def to_dUniOpMat(self):
         return self.unitary_op()
 
@@ -132,8 +145,17 @@ class dKmat(dMat):
         return self.to_dTmat().to_dXSmat()
     def to_dXSsca(self):
         return self.to_dXSmat().to_dXSsca()
+
     def to_dEPhaseMat(self):
-        raise NotImplementedError
+        new_item = self._create_new_item(new_type=dEPhasemat)
+        self._init_new_item(new_item)
+        dKmat_diag = self.diagonalise()
+        for ene in dKmat_diag:
+            val = dKmat_diag[ene] # force fun eval if relevant
+            new_item[ene] = mfu.nw.arctan(val)
+        return new_item
+    def to_dEPhaseSca(self):
+        return self.to_dEPhaseMat().to_dEPhaseSca()
 
 class dTmat(dMat):
     def __init__(self, d=None, asymcalc=None, source_str=""):
@@ -167,8 +189,24 @@ class dTmat(dMat):
         return new_item
     def to_dXSsca(self):
         return self.to_dXSmat().to_dXSsca()
+
     def to_dEPhaseMat(self):
-        raise NotImplementedError
+        return self.to_dKmat().to_dEPhaseMat()
+    def to_dEPhaseSca(self):
+        return self.to_dEPhaseMat().to_dEPhaseSca()
+
+class dEPhasemat(dMat):
+    def __init__(self, d=None, asymcalc=None, source_str=""):
+        dMat.__init__(self, d, asymcalc, "radians", "Eigenphase Matrix",
+                      "Energy", "Eigenphase", source_str)
+
+    def to_dEPhaseSca(self):
+        new_item = dEPhaseSca({}, self.x_units, self.source_str)
+        self._init_new_item(new_item)
+        for ene in self:
+            val = self[ene] # force fun eval if relevant
+            new_item[ene] = mfu.nw.sum_elements(val)
+        return new_item
 
 class dXSmat(dMat):
     def __init__(self, d=None, asymcalc=None, source_str=""):
