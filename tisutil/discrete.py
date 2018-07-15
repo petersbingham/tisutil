@@ -29,7 +29,7 @@ class dBase:
                 raise Exception("Unknown conversion")
         else:
             raise Exception("Unknown conversion")
-        new_item = self._create_new_item(units=new_x_units)
+        new_item = self._create_new_item(x_units=new_x_units)
         self._init_new_item(new_item)
         for ene,val in self.iteritems():
             if not callable(val):
@@ -77,10 +77,10 @@ class dMat(mfu.dMat, dBase):
     def _get_reduction_container(self):
         return dVec({}, self.x_units, self.y_units, self.chart_title,
                     self.x_plotlbl, self.y_plotlbl, self.source_str)
-    def _create_new_item(self, units=None, new_type=None):
+    def _create_new_item(self, x_units=None, new_type=None):
         asymcalc = copy.deepcopy(self.asymcalc)
-        if units is not None:
-            asymcalc.units = units
+        if x_units is not None:
+            asymcalc.units = x_units
         if new_type is None:
             new_type = type(self)
         new_item = new_type({}, asymcalc, self.source_str)
@@ -98,9 +98,11 @@ class dMat(mfu.dMat, dBase):
                 new_item[ene] = num(val)
         return new_item
     def _get_dSca(self):
-        return dSca(asymcalc=self.asymcalc, source_str=self.source_str)
+        return dSca(x_units=self.asymcalc.get_units(),
+                    source_str=self.source_str)
     def _get_dVec(self):
-        return dVec(asymcalc=self.asymcalc, source_str=self.source_str)
+        return dVec(x_units=self.asymcalc.get_units(),
+                    source_str=self.source_str)
     def _get_dMat(self):
         return dMat(asymcalc=self.asymcalc, source_str=self.source_str)
 
