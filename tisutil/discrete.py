@@ -97,6 +97,12 @@ class dMat(mfu.dMat, dBase):
             else:
                 new_item[ene] = num(val)
         return new_item
+    def _get_dSca(self):
+        return dSca(asymcalc=self.asymcalc, source_str=self.source_str)
+    def _get_dVec(self):
+        return dVec(asymcalc=self.asymcalc, source_str=self.source_str)
+    def _get_dMat(self):
+        return dMat(asymcalc=self.asymcalc, source_str=self.source_str)
 
 class dSmat(dMat):
     def __init__(self, d=None, asymcalc=None, source_str=""):
