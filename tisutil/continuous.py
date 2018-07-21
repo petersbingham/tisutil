@@ -1,5 +1,11 @@
 from discrete import *
 
+def _set_chart_title_for_new(item, new_item):
+    # Chart title has been supplemented in the client.
+    # This is a bit of a hack since title set in discrete for tisutil.
+    if item.chart_title != "":
+        new_item.supplement_chart_title(item.chart_title)
+
 class cMat(mfu.cMat):
     def __init__(self, fun_ref, asymcalc=None, source_str=""):
         mfu.cMat.__init__(self, fun_ref, 
@@ -9,15 +15,21 @@ class cMat(mfu.cMat):
 
 class cSmat(cMat):
     def _get_discrete_container(self):
-        return dSmat({}, self.asymcalc, self.source_str)
+        dsmat = dSmat({}, self.asymcalc, self.source_str)
+        _set_chart_title_for_new(self, dsmat)
+        return dsmat
 
 class cKmat(cMat):
     def _get_discrete_container(self):
-        return dKmat({}, self.asymcalc, self.source_str)
+        dkmat = dKmat({}, self.asymcalc, self.source_str)
+        _set_chart_title_for_new(self, dkmat)
+        return dkmat
 
 class cTmat(cMat):
     def _get_discrete_container(self):
-        return dTmat({}, self.asymcalc, self.source_str)
+        dtmat = dTmat({}, self.asymcalc, self.source_str)
+        _set_chart_title_for_new(self, dtmat)
+        return dtmat
 
 def get_continuous_scattering_matrix(mat_type, fun_ref, asymcalc, source_str):
     if mat_type == Smat:
@@ -42,8 +54,12 @@ class cMatSympypolyk(mfu.cMatSympypoly):
 
 class cFinMatSympypolyk(cMatSympypolyk):
     def _get_discrete_container(self):
-        return dFin({}, self.asymcalc, self.source_str)
+        dfin = dFin({}, self.asymcalc, self.source_str)
+        _set_chart_title_for_new(self, dfin)
+        return dfin
 
 class cSMatSympypolyk(cMatSympypolyk):
     def _get_discrete_container(self):
-        return dSmat({}, self.asymcalc, self.source_str)
+        dsmat = dSmat({}, self.asymcalc, self.source_str)
+        _set_chart_title_for_new(self, dsmat)
+        return dsmat
