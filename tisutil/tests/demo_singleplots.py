@@ -19,14 +19,17 @@ c.plot(imag=True)
 d = a.trace()
 d.plot()
 
-e = a[1:].to_dXSmat().to_dXSsca()
+e = a[1:].to_dKmat().eigenvalues()
 e.plot()
 
-f = a[1:].to_dXSsca()
+f = a[1:].to_dXSmat().to_dXSsca()
 f.plot()
 
-e = a[1:].to_dEPhaseMat().to_dEPhaseSca()
-e.plot()
+g = a[1:].to_dXSsca()
+g.plot()
 
-f = a[1:].to_dEPhaseSca()
-f.plot()
+h = a[1:].to_dEPhaseMat().to_dEPhaseSca()
+h.plot()
+
+i = a[1:].to_dEPhaseSca()
+i.plot()
