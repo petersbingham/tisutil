@@ -86,7 +86,7 @@ class dMat(mfu.dMat, dBase):
         new_item = new_type({}, asymcalc, self.source_str)
         return new_item
     def _I(self):
-        return mfu.nw.identity(self._get_size())
+        return mfu.nw.identity(self.valshape()[0])
     def _convert(self, new_type, num, denum=None):
         new_item = self._create_new_item(new_type=new_type)
         self._init_new_item(new_item)
