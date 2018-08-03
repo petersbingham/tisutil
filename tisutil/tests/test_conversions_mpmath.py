@@ -10,7 +10,7 @@ import unittest
 nw = dum_mats.tu.mfu.nw
 
 def use_mpmath_types():
-    nw.use_mpmath_types()
+    nw.use_mpmath_types(dps=100)
 
 class test_StoT(unittest.TestCase):
     def runTest(self):
