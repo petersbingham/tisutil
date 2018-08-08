@@ -39,7 +39,15 @@ class dBase:
         return new_item
 
 class dSca(mfu.dSca, dBase):
-    pass
+    def _create_new_item(self, x_units=None, y_units=None, new_type=None):
+        if x_units is None:
+            x_units = self.x_units
+        if y_units is None:
+            y_units = self.y_units
+        if new_type is None:
+            new_type = type(self)
+        new_item = new_type({}, x_units, self.source_str)
+        return new_item
 
 class dXSsca(dSca):
     def __init__(self, d=None, x_units=None, source_str=None):
