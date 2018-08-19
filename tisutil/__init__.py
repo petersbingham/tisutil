@@ -1,4 +1,5 @@
 from continuous import *
+from tisutil.release import __version__
 
 def use_python_types():
     mfu.nw.use_python_types()

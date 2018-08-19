@@ -60,7 +60,7 @@ class dXSsca(dSca):
 
 class dEPhaseSca(dSca):
     def __init__(self, d=None, x_units=None, source_str=None):
-        y_units = "radians"
+        y_units = "rad"
         x_plotlbl = "Energy"
         y_plotlbl = "Eigenphase Sum"
         chart_title = "Eigenphase Sum"
@@ -213,7 +213,7 @@ class dTmat(dMat):
 
 class dEPhasemat(dMat):
     def __init__(self, d=None, asymcalc=None, source_str=""):
-        dMat.__init__(self, d, asymcalc, "radians", "Eigenphase Matrix",
+        dMat.__init__(self, d, asymcalc, "rad", "Eigenphase Matrix",
                       "Energy", "Eigenphase", source_str)
 
     def to_dEPhaseSca(self):
