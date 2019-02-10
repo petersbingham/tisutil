@@ -31,6 +31,12 @@ class cTmat(cMat):
         _set_chart_title_for_new(self, dtmat)
         return dtmat
 
+class cQmat(cMat):
+    def _get_discrete_container(self):
+        dqmat = dQmat({}, self.asymcalc, self.source_str)
+        _set_chart_title_for_new(self, dqmat)
+        return dqmat
+
 def get_continuous_scattering_matrix(mat_type, fun_ref, asymcalc, source_str):
     if mat_type == Smat:
         return cSmat(fun_ref, asymcalc, source_str)
