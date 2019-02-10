@@ -17,7 +17,7 @@ Author (these will have their own dependencies):
 
 ## Overview
 
-This package extends the containers in the [matfuncutil](https://github.com/petersbingham/matfuncutil) for the various scattering representations and provides common units and conversions. The provided discrete scattering matrix containers are `dSmat`, `dKmat`, `dTmat` and `dXSmat`. A scalar container, `dXSsca` is provided for total cross sections. Functions of the form `to_dSmat` etc are provided by the `dSmat`, `dKmat`, `dTmat` to easy allow conversions between the representations, as well as `to_dXSsca` to calculate the total cross section. 
+This package extends the containers in the [matfuncutil](https://github.com/petersbingham/matfuncutil) for the various scattering representations and provides common units and conversions. The provided discrete scattering matrix containers are `dSmat`, `dKmat`, `dTmat`, `dQmat`, `dXSmat` and `dEPhaseMat`. Also provided are the scalar containers, `dXSsca` and `dEPhaseSca`. Functions of the form `to_dSmat` etc are provided by the `dSmat`, `dKmat`, `dTmat` etc. to allow easy conversions between the representations, as well as `to_dXSsca` to calculate the total cross section. 
 
 A continuous container is also provided, `cMatSympypolyk`, which extends `matfuncutil.cMatSympypoly` by allowing energy parametrisation using the `AsymCalc` object.
 

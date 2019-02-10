@@ -173,7 +173,7 @@ class dKmat(dMat):
         return self.to_dXSmat().to_dXSsca()
 
     def to_dEPhaseMat(self):
-        new_item = self._create_new_item(new_type=dEPhasemat)
+        new_item = self._create_new_item(new_type=dEPhaseMat)
         self._init_new_item(new_item)
         dKmat_diag = self.diagonalise()
         for ene in dKmat_diag:
@@ -227,7 +227,7 @@ class dTmat(dMat):
     def to_dQmat(self):
         return self.to_dSmat().to_dQmat()
 
-class dEPhasemat(dMat):
+class dEPhaseMat(dMat):
     def __init__(self, d=None, asymcalc=None, source_str=""):
         dMat.__init__(self, d, asymcalc, "rad", "Eigenphase Matrix",
                       "Energy", "Eigenphase", source_str)
